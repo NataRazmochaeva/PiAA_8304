@@ -220,6 +220,19 @@ public:
 							}
 							inp_square(dot);
 							current_solution.push_back(dot);
+
+						
+        						std::cout << "currrent table" << "\n";
+
+        						for (int i = 0; i < length; i++)
+        						{
+            							for (int j = 0; j < length; j++)
+            							{
+                							std::cout <<table[i][j] << " ";
+            							}
+            							std::cout << "\n";
+        						}
+        						std::cout << "\n";
 						}
 					}
 				}
@@ -233,19 +246,8 @@ public:
 				copy_square();
 				best = current_solution;
 
-				void print_table()
+				//void print_table()
     
-        			std::cout << "currrent best table" << "\n";
-
-        			for (int i = 0; i < length; i++)
-        			{
-            				for (int j = 0; j < length; j++)
-            				{
-                					std::cout << best[i][j] << " ";
-            				}
-            					std::cout << "\n";
-        			}
-        			std::cout << "\n";
     
 			}
 
