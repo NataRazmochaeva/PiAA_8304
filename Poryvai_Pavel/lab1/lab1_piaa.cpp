@@ -232,6 +232,21 @@ public:
 				best_count = count;
 				copy_square();
 				best = current_solution;
+
+				void print_table()
+    
+        			std::cout << "currrent best table" << "\n";
+
+        			for (int i = 0; i < length; i++)
+        			{
+            				for (int j = 0; j < length; j++)
+            				{
+                					std::cout << best[i][j] << " ";
+            				}
+            					std::cout << "\n";
+        			}
+        			std::cout << "\n";
+    
 			}
 
 
