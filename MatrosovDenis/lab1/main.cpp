@@ -3,6 +3,7 @@
 #include <ctime>
 #include <vector>
 #include <math.h>
+
 using std::vector;
 
 class Square
@@ -193,10 +194,10 @@ bool Table::chek() {
 	return true;
 }
 
-Table& Table::remove(Square point) {
-	for (int i = point.y; i < point.y + point.length; i++)
+Table& Table::remove(Square square) {
+	for (int i = square.y; i < square.y + square.length; i++)
 	{
-		for (int j = point.x; j < point.x + point.length; j++)
+		for (int j = square.x; j < square.x + square.length; j++)
 		{
 			table[i][j] = 0;
 		}
@@ -232,20 +233,20 @@ size_t Table::primal_size(size_t size_){
 
 Table& Table::shareTable()
 {
-	Square point;
-	point.length = size / 2 + size % 2;
-	current_share.push_back(point);
-	rewrite(point);
+	Square square;
+	square.length = size / 2 + size % 2;
+	current_share.push_back(square);
+	rewrite(square);
 
-	point.length = size / 2;
-	point.x = size / 2 + size % 2;
-	current_share.push_back(point);
-	rewrite(point);
+	square.length = size / 2;
+	square.x = size / 2 + size % 2;
+	current_share.push_back(square);
+	rewrite(square);
 
-	point.x = 0;
-	point.y = size / 2 + size % 2;
-	current_share.push_back(point);
-	rewrite(point);
+	square.x = 0;
+	square.y = size / 2 + size % 2;
+	current_share.push_back(square);
+	rewrite(square);
 
 	do
 	{
@@ -261,15 +262,15 @@ Table& Table::shareTable()
 						{
 							if (can_insert(j, i, len))
 							{
-								point.x = j;
-								point.y = i;
-								point.length = len;
+								square.x = j;
+								square.y = i;
+								square.length = len;
 								break;
 							}
 
 						}
-						rewrite(point);
-						current_share.push_back(point);
+						rewrite(square);
+						current_share.push_back(square);
 					}
 				}
 			}
@@ -277,6 +278,8 @@ Table& Table::shareTable()
 
 		if (result_count > count || result_count == 4)
 		{
+			std::cout << "Update result vector, becouse number of squares less than previous value." << std::endl << "Now result table is:" << std::endl;
+			printTable();
 			result_count = count;
 			rewriteShare();
 			result = current_share;
@@ -288,12 +291,12 @@ Table& Table::shareTable()
 		}
 		if (!(current_share.empty()))
 		{
-			point = current_share[current_share.size() - 1];
+			square = current_share[current_share.size() - 1];
 			current_share.pop_back();
-			remove(point);
-			point.length -= 1;
-			rewrite(point);
-			current_share.push_back(point);
+			remove(square);
+			square.length -= 1;
+			rewrite(square);
+			current_share.push_back(square);
 		}
 
 
@@ -318,8 +321,9 @@ int main() {
 	std::cin >> size;
 
 	Table t(size);
-
-	t.shareTable().print_result();
-
+	
+	t.shareTable();
+	std::cout << std::endl << "Result is:" << std::endl;
+	t.print_result();
 	return 0;
 }
