@@ -4,7 +4,7 @@
 #include <thread>
 #include <algorithm>
 #include <set>
-
+#include <iterator>
 
 std::vector<int> prefix_function(std::string s) {
 	int n = (int)s.length();
@@ -52,7 +52,7 @@ std::vector<int> prefix_function(std::string s) {
 std::vector<int> KMP(std::string t, std::string p, std::vector<int>& pi) {
 	std::vector<int> ans;
 
-	std::cout << "Префикс-функция для образца  " << p << std::endl;
+	std::cout << "РџСЂРµС„РёРєСЃ-С„СѓРЅРєС†РёСЏ РґР»СЏ РѕР±СЂР°Р·С†Р°  " << p << std::endl;
 	for (int i = 0; i < pi.size(); i++)
 		std::cout << pi[i] << ' ';
 	std::cout << std::endl;
@@ -65,21 +65,21 @@ std::vector<int> KMP(std::string t, std::string p, std::vector<int>& pi) {
 	{
 		if (t[k] == p[l]) 
 		{
-			std::cout << "Совпадение:   " << t[k] << "==" << p[l] << " index: " << k << " " << l << std::endl;
+			std::cout << "РЎРѕРІРїР°РґРµРЅРёРµ:   " << t[k] << "==" << p[l] << " index: " << k << " " << l << std::endl;
 			k++; 
 			l++;
-			if (l == m) { ans.push_back(k - l); std::cout << "Найдена подстрока\n-----------------------" << std::endl; }
+			if (l == m) { ans.push_back(k - l); std::cout << "РќР°Р№РґРµРЅР° РїРѕРґСЃС‚СЂРѕРєР°\n-----------------------" << std::endl; }
 		}
 		else 
 		{
 			if (l == 0)
 			{
-				std::cout << "Несовпадение: " << t[k] << "!=" << p[l] << " index: " << k << " " << l << std::endl;
+				std::cout << "РќРµСЃРѕРІРїР°РґРµРЅРёРµ: " << t[k] << "!=" << p[l] << " index: " << k << " " << l << std::endl;
 				k++;
 			}
 			else 
 			{
-				std::cout << "Несовпадение: " << t[k] << "!=" << p[l] << " index: " << k << " " << l << std::endl;
+				std::cout << "РќРµСЃРѕРІРїР°РґРµРЅРёРµ: " << t[k] << "!=" << p[l] << " index: " << k << " " << l << std::endl;
 				l = pi[l - 1];
 			}
 		}
@@ -92,10 +92,10 @@ void split(std::string t, std::string p, int k, std::vector<std::string>& str, s
 	int len_parts, flag = 0;
 	int k1;
 	//---------------------------------------------------
-	//определяем длинну каждой части
+	//РѕРїСЂРµРґРµР»СЏРµРј РґР»РёРЅРЅСѓ РєР°Р¶РґРѕР№ С‡Р°СЃС‚Рё
 	if (t.length() % k) 
 	{
-		len_parts = int(t.length() / k) + 1; //длинна части строки
+		len_parts = int(t.length() / k) + 1; //РґР»РёРЅРЅР° С‡Р°СЃС‚Рё СЃС‚СЂРѕРєРё
 		flag = 1;
 		k1 = k - 1;
 	}
@@ -107,7 +107,7 @@ void split(std::string t, std::string p, int k, std::vector<std::string>& str, s
 	//---------------------------------------------------
 	int begin = 0;
 	std::string part = "";
-	//цикл для получения массива подстрок из текста
+	//С†РёРєР» РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РјР°СЃСЃРёРІР° РїРѕРґСЃС‚СЂРѕРє РёР· С‚РµРєСЃС‚Р°
 	while (k1 > 0) 
 	{
 		part = "";
@@ -123,7 +123,7 @@ void split(std::string t, std::string p, int k, std::vector<std::string>& str, s
 		str.push_back(part);
 	}
 
-	//цикл для получения и проверки подстрок на стыках на каждом стыке проверяется 2 стрки
+	//С†РёРєР» РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ Рё РїСЂРѕРІРµСЂРєРё РїРѕРґСЃС‚СЂРѕРє РЅР° СЃС‚С‹РєР°С… РЅР° РєР°Р¶РґРѕРј СЃС‚С‹РєРµ РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ 2 СЃС‚СЂРєРё
 	k1 = 1;
 	while (k1 < k) 
 	{
@@ -132,13 +132,13 @@ void split(std::string t, std::string p, int k, std::vector<std::string>& str, s
 		int top = (len_parts * k1) - p.length() + 1;
 
 		std::cout << "---------------------------------------" << std::endl;
-		std::cout << "Подстрака с центром на месте разреза - " << part << std::endl;
-		std::cout << "Индексы в исходном тексте: ";
+		std::cout << "РџРѕРґСЃС‚СЂР°РєР° СЃ С†РµРЅС‚СЂРѕРј РЅР° РјРµСЃС‚Рµ СЂР°Р·СЂРµР·Р° - " << part << std::endl;
+		std::cout << "РРЅРґРµРєСЃС‹ РІ РёСЃС…РѕРґРЅРѕРј С‚РµРєСЃС‚Рµ: ";
 		for (int i = 0; i < part.size(); i++) 
 			std::cout << i + top << ' ';
 		std::cout << std::endl;
 
-		std::cout << "Индексы:                   ";
+		std::cout << "РРЅРґРµРєСЃС‹:                   ";
 		for (int i = 0; i < part.size(); i++) 
 		{
 			if (i + top > 9)
@@ -148,7 +148,7 @@ void split(std::string t, std::string p, int k, std::vector<std::string>& str, s
 		}
 		std::cout << std::endl;
 
-		std::cout << "Символы подстроки:         ";
+		std::cout << "РЎРёРјРІРѕР»С‹ РїРѕРґСЃС‚СЂРѕРєРё:         ";
 		for (int i = 0; i < part.size(); i++)
 		{
 			if (i + top > 9)
@@ -163,7 +163,7 @@ void split(std::string t, std::string p, int k, std::vector<std::string>& str, s
 		{
 			for (int i = 0; i < ans_current.size(); i++)
 			{
-				ans_current[i] += top; //определяем номер символа начала подстроки в исходном тексте
+				ans_current[i] += top; //РѕРїСЂРµРґРµР»СЏРµРј РЅРѕРјРµСЂ СЃРёРјРІРѕР»Р° РЅР°С‡Р°Р»Р° РїРѕРґСЃС‚СЂРѕРєРё РІ РёСЃС…РѕРґРЅРѕРј С‚РµРєСЃС‚Рµ
 				ans_all.insert(ans_current[i]);
 			}
 		}
@@ -176,33 +176,33 @@ void split(std::string t, std::string p, int k, std::vector<std::string>& str, s
 int main(){
 	setlocale(LC_ALL, "Russian");
 
-	std::cout << "\tСправка\nЧтобы запустить программу введите номер задачи или ее название.\n"
-		"\tНайдите все вхождения обзарца в тексте:\nНомер задачи - 1\nНазвание - KMP или kmp\n"
-		"\tОпределить, является ли стока 1 циклическим сдвигом строки 2:\nНомер задачи - 2\nНазвание - Rotation или rotation" << std::endl;
+	std::cout << "\tРЎРїСЂР°РІРєР°\nР§С‚РѕР±С‹ Р·Р°РїСѓСЃС‚РёС‚СЊ РїСЂРѕРіСЂР°РјРјСѓ РІРІРµРґРёС‚Рµ РЅРѕРјРµСЂ Р·Р°РґР°С‡Рё РёР»Рё РµРµ РЅР°Р·РІР°РЅРёРµ.\n"
+		"\tРќР°Р№РґРёС‚Рµ РІСЃРµ РІС…РѕР¶РґРµРЅРёСЏ РѕР±Р·Р°СЂС†Р° РІ С‚РµРєСЃС‚Рµ:\nРќРѕРјРµСЂ Р·Р°РґР°С‡Рё - 1\nРќР°Р·РІР°РЅРёРµ - KMP РёР»Рё kmp\n"
+		"\tРћРїСЂРµРґРµР»РёС‚СЊ, СЏРІР»СЏРµС‚СЃСЏ Р»Рё СЃС‚СЂРѕРєР° 1 С†РёРєР»РёС‡РµСЃРєРёРј СЃРґРІРёРіРѕРј СЃС‚СЂРѕРєРё 2:\nРќРѕРјРµСЂ Р·Р°РґР°С‡Рё - 2\nРќР°Р·РІР°РЅРёРµ - Rotation РёР»Рё rotation" << std::endl;
 	std::cout << std::endl;
 
 	std::string task;
-	std::cout << "Введите номер задачи или название алгоритма" << std::endl;
+	std::cout << "Р’РІРµРґРёС‚Рµ РЅРѕРјРµСЂ Р·Р°РґР°С‡Рё РёР»Рё РЅР°Р·РІР°РЅРёРµ Р°Р»РіРѕСЂРёС‚РјР°" << std::endl;
 	std::getline(std::cin, task);
 
 	if (task == "KMP" or task == "kmp" or task == "1") 
 	{
 		std::string p, t;
-		std::cout << "Введите текст" << std::endl;
+		std::cout << "Р’РІРµРґРёС‚Рµ С‚РµРєСЃС‚" << std::endl;
 		std::getline(std::cin, t);
-		std::cout << "Введите образец (искомую подстроку)" << std::endl;
+		std::cout << "Р’РІРµРґРёС‚Рµ РѕР±СЂР°Р·РµС† (РёСЃРєРѕРјСѓСЋ РїРѕРґСЃС‚СЂРѕРєСѓ)" << std::endl;
 		std::getline(std::cin, p);
 
 		if (t.length() < p.length()) 
 		{
-			std::cout << "Образец не может быть больше текста!" << std::endl;
+			std::cout << "РћР±СЂР°Р·РµС† РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р±РѕР»СЊС€Рµ С‚РµРєСЃС‚Р°!" << std::endl;
 			std::cout << -1 << std::endl;
 			return 0;
 		}
 
-		int max_threads = sizeof(std::thread); // определяем максимально возможное число потоков
+		int max_threads = sizeof(std::thread); // РѕРїСЂРµРґРµР»СЏРµРј РјР°РєСЃРёРјР°Р»СЊРЅРѕ РІРѕР·РјРѕР¶РЅРѕРµ С‡РёСЃР»Рѕ РїРѕС‚РѕРєРѕРІ
 		//---------------------------------------------------
-		// определяем на сколько частей можно раделить строку
+		// РѕРїСЂРµРґРµР»СЏРµРј РЅР° СЃРєРѕР»СЊРєРѕ С‡Р°СЃС‚РµР№ РјРѕР¶РЅРѕ СЂР°РґРµР»РёС‚СЊ СЃС‚СЂРѕРєСѓ
 		double alpha = (double)t.length() / (double)p.length();
 		max_threads = std::min(max_threads, int(alpha) - 1);
 
@@ -211,17 +211,17 @@ int main(){
 		int k;//= max_threads;
 
 		if (max_threads == 1) {
-			std::cout << "Длина исходного текста недостаточна для деления строки" << std::endl;
+			std::cout << "Р”Р»РёРЅР° РёСЃС…РѕРґРЅРѕРіРѕ С‚РµРєСЃС‚Р° РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅР° РґР»СЏ РґРµР»РµРЅРёСЏ СЃС‚СЂРѕРєРё" << std::endl;
 			k = 1;
 		}
 		else
 		{
-			std::cout << "Введите число от 1 до " << max_threads << std::endl;
+			std::cout << "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ РѕС‚ 1 РґРѕ " << max_threads << std::endl;
 			std::cin >> k;
 
 			while (k < 1 or k > max_threads) 
 			{
-				std::cout << "Введите число от 1 до " << max_threads << std::endl;
+				std::cout << "Р’РІРµРґРёС‚Рµ С‡РёСЃР»Рѕ РѕС‚ 1 РґРѕ " << max_threads << std::endl;
 				std::cin >> k;
 
 			}
@@ -235,7 +235,7 @@ int main(){
 		if (k > 1) 
 		{
 			std::cout << "--------------------------------------------" << std::endl;
-			std::cout << "Строка будет разделена на " << k << " частей" << std::endl;
+			std::cout << "РЎС‚СЂРѕРєР° Р±СѓРґРµС‚ СЂР°Р·РґРµР»РµРЅР° РЅР° " << k << " С‡Р°СЃС‚РµР№" << std::endl;
 		}
 
 		if (k == 1) 
@@ -247,29 +247,29 @@ int main(){
 		else
 		{
 			//---------------------------------------------------
-			// определяем длинну каждой части
+			// РѕРїСЂРµРґРµР»СЏРµРј РґР»РёРЅРЅСѓ РєР°Р¶РґРѕР№ С‡Р°СЃС‚Рё
 			int len_parts;
 			if (t.length() % k) 
-				len_parts = int(t.length() / k) + 1; //длинна части строки
+				len_parts = int(t.length() / k) + 1; //РґР»РёРЅРЅР° С‡Р°СЃС‚Рё СЃС‚СЂРѕРєРё
 			else 
 				len_parts = t.length() / k;
 
-			std::cout << "Максимальная длинна части исходного текста - " << len_parts << std::endl;
+			std::cout << "РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅРЅР° С‡Р°СЃС‚Рё РёСЃС…РѕРґРЅРѕРіРѕ С‚РµРєСЃС‚Р° - " << len_parts << std::endl;
 			std::cout << "--------------------------------------------" << std::endl;
 			std::cout << std::endl;
 
 			split(t, p, k, str, ans_current, ans_all, pi);
 			//---------------------------------------------------
-			//заполняем исходный массив ответов
+			//Р·Р°РїРѕР»РЅСЏРµРј РёСЃС…РѕРґРЅС‹Р№ РјР°СЃСЃРёРІ РѕС‚РІРµС‚РѕРІ
 			for (int i = 0; i < str.size(); i++) 
 			{
-				std::cout << "------------------------\nЧасть исходного текста     " << str[i] << std::endl;
-				std::cout << "Индексы в исходном тексте: ";
+				std::cout << "------------------------\nР§Р°СЃС‚СЊ РёСЃС…РѕРґРЅРѕРіРѕ С‚РµРєСЃС‚Р°     " << str[i] << std::endl;
+				std::cout << "РРЅРґРµРєСЃС‹ РІ РёСЃС…РѕРґРЅРѕРј С‚РµРєСЃС‚Рµ: ";
 				for (int j = 0; j < str[i].size(); j++) 
 					std::cout << j + len_parts * i << ' ';
 				std::cout << std::endl;
 
-				std::cout << "Индексы:                   ";
+				std::cout << "РРЅРґРµРєСЃС‹:                   ";
 				for (int j = 0; j < str[i].size(); j++) {
 					if (j + len_parts * i > 9)
 						std::cout << j << "  ";
@@ -278,7 +278,7 @@ int main(){
 				}
 				std::cout << std::endl;
 
-				std::cout << "Символы подстроки:         ";
+				std::cout << "РЎРёРјРІРѕР»С‹ РїРѕРґСЃС‚СЂРѕРєРё:         ";
 				for (int j = 0; j < str[i].size(); j++) {
 					if (j + len_parts * i > 9)
 						std::cout << str[i][j] << "  ";
@@ -290,17 +290,18 @@ int main(){
 				ans_current = KMP(str[i], p, pi);
 				if (ans_current.size() > 0) {
 					for (int j = 0; j < ans_current.size(); j++)
-						ans_current[j] += (len_parts * i); // определяем номер символа начала образца в исходном тексте
+						ans_current[j] += (len_parts * i); // РѕРїСЂРµРґРµР»СЏРµРј РЅРѕРјРµСЂ СЃРёРјРІРѕР»Р° РЅР°С‡Р°Р»Р° РѕР±СЂР°Р·С†Р° РІ РёСЃС…РѕРґРЅРѕРј С‚РµРєСЃС‚Рµ
 					for (int j = 0; j < ans_current.size(); j++)
 						ans_all.insert(ans_current[j]);
 				}
 			}
 		}
-		// Ввывод ответа
+		// Р’РІС‹РІРѕРґ РѕС‚РІРµС‚Р°
 		if (!ans_all.empty()) 
 		{
 			int end = *ans_all.rbegin();
 			ans_all.erase(end);
+			copy(ans_all.begin(), ans_all.end(), std::ostream_iterator<int>(std::cout, ","));
 			std::cout << end << std::endl;
 		}
 		else 
@@ -311,10 +312,10 @@ int main(){
 		if (task == "Rotation" or task == "rotation" or task == "2") 
 		{
 			std::string a, b;
-			std::cout << "Введите строки 1 и 2" << std::endl;
+			std::cout << "Р’РІРµРґРёС‚Рµ СЃС‚СЂРѕРєРё 1 Рё 2" << std::endl;
 			std::cin >> a >> b;
 			std::vector<int> pi = prefix_function(b);
-			std::cout << "Префикс-функция для строки 2" << std::endl;
+			std::cout << "РџСЂРµС„РёРєСЃ-С„СѓРЅРєС†РёСЏ РґР»СЏ СЃС‚СЂРѕРєРё 2" << std::endl;
 
 			for (int i = 0; i < pi.size(); i++)
 				std::cout << pi[i] << ' ';
@@ -322,18 +323,18 @@ int main(){
 
 			if (b.length() != a.length())
 			{
-				std::cout << "Разная длинна строк!" << std::endl;
+				std::cout << "Р Р°Р·РЅР°СЏ РґР»РёРЅРЅР° СЃС‚СЂРѕРє!" << std::endl;
 				std::cout << "-1" << std::endl;
 				return 0;
 			}
 			if (a == b) {
-				std::cout << "Строки совпадают" << std::endl;
+				std::cout << "РЎС‚СЂРѕРєРё СЃРѕРІРїР°РґР°СЋС‚" << std::endl;
 				std::cout << 0 << std::endl;
 				return 0;
 			}
 
-			std::cout << "it_a - указатель на текущий символ в строке 1" << std::endl;
-			std::cout << "it_b - указатель на текущий символ в строке 2" << std::endl;
+			std::cout << "it_a - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С‚РµРєСѓС‰РёР№ СЃРёРјРІРѕР» РІ СЃС‚СЂРѕРєРµ 1" << std::endl;
+			std::cout << "it_b - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° С‚РµРєСѓС‰РёР№ СЃРёРјРІРѕР» РІ СЃС‚СЂРѕРєРµ 2" << std::endl;
 
 			int it_a = 0, it_b = 0;
 			int cikle = 0;
@@ -343,7 +344,7 @@ int main(){
 			{
 				if (a[it_a] == b[it_b]) 
 				{
-					std::cout << "Совпадение:   " << a[it_a] << "==" << b[it_b] << " index: " << it_a << " " << it_b << std::endl;
+					std::cout << "РЎРѕРІРїР°РґРµРЅРёРµ:   " << a[it_a] << "==" << b[it_b] << " index: " << it_a << " " << it_b << std::endl;
 					it_a++;
 					it_b++;
 				}
@@ -354,25 +355,25 @@ int main(){
 				}
 				if (it_b == al)
 				{
-					std::cout << "Цикл: ";
+					std::cout << "Р¦РёРєР»: ";
 					std::cout << it_a << std::endl;
-					std::cout << "Ответом является текущей it_a + 1, т.к. мы прошли всю строку и it_a указывает на ее конец" << std::endl;
+					std::cout << "РћС‚РІРµС‚РѕРј СЏРІР»СЏРµС‚СЃСЏ С‚РµРєСѓС‰РµР№ it_a + 1, С‚.Рє. РјС‹ РїСЂРѕС€Р»Рё РІСЃСЋ СЃС‚СЂРѕРєСѓ Рё it_a СѓРєР°Р·С‹РІР°РµС‚ РЅР° РµРµ РєРѕРЅРµС†" << std::endl;
 					return 0;
 				}
 				else
 				{
 					if (a[it_a] != b[it_b]) 
 					{
-						std::cout << "Несовпадение: " << a[it_a] << "!=" << b[it_b] << " index: " << it_a << " " << it_b << std::endl;
+						std::cout << "РќРµСЃРѕРІРїР°РґРµРЅРёРµ: " << a[it_a] << "!=" << b[it_b] << " index: " << it_a << " " << it_b << std::endl;
 						if (it_b == 0)
 						{
 							it_a++;
-							std::cout << "Увеличиваем it_a" << std::endl;
+							std::cout << "РЈРІРµР»РёС‡РёРІР°РµРј it_a" << std::endl;
 						}
 						else
 						{
 							it_b = pi[it_b - 1];
-							std::cout << "Уменьшаем it_b" << std::endl;
+							std::cout << "РЈРјРµРЅСЊС€Р°РµРј it_b" << std::endl;
 						}
 					}
 				}
