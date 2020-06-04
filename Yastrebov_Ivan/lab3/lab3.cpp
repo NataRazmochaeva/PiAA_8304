@@ -42,25 +42,22 @@ bool compLexic(std::pair<char, elem> first, std::pair<char, elem> second) {
 void modifyCapacities(char start, char finish, std::map<char, char> path, std::map<char,
 	std::vector<std::pair<char, elem>>>& desk, int min, std::ostream& output) {
 	
-	std::vector<char> result;
+	std::string result;
 
 	char current = finish;
 
-	result.push_back(current);
+	result += current;
 
-	while (current != start) {//Храним путь в векторе
+	while (current != start) {
 		current = path[current];
-		result.push_back(current);
+		result += current;
 	}
 
-	output << "Found path: ";//Вывод промежуточных данных
-
-	for (size_t i = 0; i < result.size(); ++i) {
-		output << result[result.size() - i - 1];//выводим найденный путь
-	}
-
-	output << std::endl << std::endl;
-
+	output << "Found path: "; //Вывод промежуточных данных
+	std::reverse(result.begin(), result.end());
+	output << result;
+	output << std::endl;
+	std::reverse(result.begin(), result.end());
 
 	output << "Changes done:" << std::endl; // Вывод промежуточных данных
 
