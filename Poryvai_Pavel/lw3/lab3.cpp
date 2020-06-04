@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include<vector>
 #include<set>
 #include <iostream>
@@ -8,7 +8,13 @@
 #include<string>
 #include<cstring>
 #include<algorithm>
+#include <fstream>
 using namespace std;
+
+
+ofstream fout("out.txt"); // создаём объект класса ofstream для записи и связываем его с файлом cppstudio.txt
+ifstream fin("inp.txt");
+
 
 struct vertex_len {
 	char name;
@@ -46,81 +52,164 @@ bool operator < (const vertex_len& dot1, const vertex_len& dot2)
 }
 int main()
 {
+
+	
 	setlocale(LC_ALL, "Russian");
 	int MaxN = 0;
 	char u, v;
 	char start, end;
-	std::cin >> MaxN;
-	std::cin >> start;
-	std::cin >> end;
+	std::cout << "Inp console or file(1/2)";
+	int inp;
+	cin >> inp;
+	if (inp == 1) {
+		std::cin >> MaxN;
+		std::cin >> start;
+		std::cin >> end;
 
-	vector <vector <char> > Adj(100);//список смежных вершин
-	vector <vector<vertex_len>> Adj1(100);//список смежных вершин с расстояниями
+		vector <vector <char> > Adj(100);//список смежных вершин
+		vector <vector<vertex_len>> Adj1(100);//список смежных вершин с расстояниями
 
 
 
 
 
-	int MaxI = MaxN;
+		int MaxI = MaxN;
 
-	int len;
+		int len;
 
-	vertex_len v_l;
+		vertex_len v_l;
 
-	char** aka = new char* [100];
-	for (int i = 0; i < MaxN; i++)
-		aka[i] = new char[3];
+		char** aka = new char* [100];
+		for (int i = 0; i < MaxN; i++)
+			aka[i] = new char[3];
 
-	int i = 0;
-	int j;
-	while (MaxN--) {
+		int i = 0;
+		int j;
+		while (MaxN--) {
 
-		cin >> u >> v >> len;
-		j = 0;
-		aka[i][j] = u;
-		j++;
-		aka[i][j] = v;
-		j++;
-		aka[i][j] = '\0';
-		i++;
-		if (Vertexes.find(u) == Vertexes.end())
-			Vertexes.insert(u);
+			cin >> u >> v >> len;
+			j = 0;
+			aka[i][j] = u;
+			j++;
+			aka[i][j] = v;
+			j++;
+			aka[i][j] = '\0';
+			i++;
+			if (Vertexes.find(u) == Vertexes.end())
+				Vertexes.insert(u);
 
-		if (Vertexes.find(v) == Vertexes.end())
-			Vertexes.insert(v);
+			if (Vertexes.find(v) == Vertexes.end())
+				Vertexes.insert(v);
 
-		v_l = { v,len };
-		Adj1[u - 97].push_back(v_l);
+			v_l = { v,len };
+			Adj1[u - 97].push_back(v_l);
 
-	}
-
-	std::cout << "\nДо сортировки смежных вершин\n";
-	for (int i = 0; i < 100; i++) {
-
-		if (Adj1[i].size() > 0) {
-			char a = i + 97;
-			std::cout << "\n" << a << ": ";
-			for (int j = 0; j < Adj1[i].size(); j++)
-				std::cout << Adj1[i][j].name << " " << Adj1[i][j].len << " ";
 		}
-	}
 
-	std::cout << "\nПосле сортировки смежных вершин\n";
+		std::cout << "\nДо сортировки смежных вершин\n";
+		for (int i = 0; i < 100; i++) {
 
-	for (int i = 0; i < 100; i++) {
-
-		if (Adj1[i].size() > 0) {
-			sort(Adj1[i].begin(), Adj1[i].end());
-			char a = i + 97;
-			std::cout << "\n" << a << ": ";
-			for (int j = 0; j < Adj1[i].size(); j++) {
-				std::cout << Adj1[i][j].name << " " << Adj1[i][j].len << " ";
-				Adj[i].push_back(Adj1[i][j].name);
+			if (Adj1[i].size() > 0) {
+				char a = i + 97;
+				std::cout << "\n" << a << ": ";
+				for (int j = 0; j < Adj1[i].size(); j++)
+					std::cout << Adj1[i][j].name << " " << Adj1[i][j].len << " ";
 			}
 		}
+
+		std::cout << "\nПосле сортировки смежных вершин\n";
+
+		for (int i = 0; i < 100; i++) {
+
+			if (Adj1[i].size() > 0) {
+				sort(Adj1[i].begin(), Adj1[i].end());
+				char a = i + 97;
+				std::cout << "\n" << a << ": ";
+				for (int j = 0; j < Adj1[i].size(); j++) {
+					std::cout << Adj1[i][j].name << " " << Adj1[i][j].len << " ";
+					Adj[i].push_back(Adj1[i][j].name);
+				}
+			}
+		}
+		std::cout << "\n";
+		Ford_Fulkerson(Adj1, Adj, start, end, aka, MaxI);
 	}
-	std::cout << "\n";
-	Ford_Fulkerson(Adj1, Adj, start, end, aka, MaxI);
+	else {
+
+		fin >> MaxN;
+		fin >> start;
+		fin >> end;
+
+		vector <vector <char> > Adj(100);//список смежных вершин
+		vector <vector<vertex_len>> Adj1(100);//список смежных вершин с расстояниями
+
+
+
+
+
+		int MaxI = MaxN;
+
+		int len;
+
+		vertex_len v_l;
+
+		char** aka = new char* [100];
+		for (int i = 0; i < MaxN; i++)
+			aka[i] = new char[3];
+
+		int i = 0;
+		int j;
+		while (MaxN--) {
+
+			fin >> u >> v >> len;
+			j = 0;
+			aka[i][j] = u;
+			j++;
+			aka[i][j] = v;
+			j++;
+			aka[i][j] = '\0';
+			i++;
+			if (Vertexes.find(u) == Vertexes.end())
+				Vertexes.insert(u);
+
+			if (Vertexes.find(v) == Vertexes.end())
+				Vertexes.insert(v);
+
+			v_l = { v,len };
+			Adj1[u - 97].push_back(v_l);
+
+		}
+
+		std::cout << "\nДо сортировки смежных вершин\n";
+		for (int i = 0; i < 100; i++) {
+
+			if (Adj1[i].size() > 0) {
+				char a = i + 97;
+				std::cout << "\n" << a << ": ";
+				for (int j = 0; j < Adj1[i].size(); j++)
+					std::cout << Adj1[i][j].name << " " << Adj1[i][j].len << " ";
+			}
+		}
+
+		std::cout << "\nПосле сортировки смежных вершин\n";
+
+		for (int i = 0; i < 100; i++) {
+
+			if (Adj1[i].size() > 0) {
+				sort(Adj1[i].begin(), Adj1[i].end());
+				char a = i + 97;
+				std::cout << "\n" << a << ": ";
+				for (int j = 0; j < Adj1[i].size(); j++) {
+					std::cout << Adj1[i][j].name << " " << Adj1[i][j].len << " ";
+					Adj[i].push_back(Adj1[i][j].name);
+				}
+			}
+		}
+		std::cout << "\n";
+		Ford_Fulkerson(Adj1, Adj, start, end, aka, MaxI);
+
+	}
+
 
 }
 
@@ -174,11 +263,11 @@ void Ford_Fulkerson(vector <vector <vertex_len> > Adj1, vector <vector<char>> Ad
 	path[i_path] = '\0';
 
 	while (yes) {
-		
+
 		int min = c(path, Adj1);//после определения минимального пути надо перестроить граф
 		for (int i = 0; i < strlen(path) - 1; i++) {//перестраиваем граф
 
-	
+
 			char predok = path[i];
 			char potomok = path[i + 1];
 
@@ -254,7 +343,7 @@ void Ford_Fulkerson(vector <vector <vertex_len> > Adj1, vector <vector<char>> Ad
 			qq2[1] = predok;
 			std::string str = string(f_obratno);
 			f[str] = -f[strq];
-		
+
 		}
 
 
@@ -278,17 +367,17 @@ void Ford_Fulkerson(vector <vector <vertex_len> > Adj1, vector <vector<char>> Ad
 
 
 
-		
+
 	}
 	std::cout << it << "\n";
-
+	fout << it << "\n";
 	for (int m = 0; m < size1; m++) {
 		string qq = string(ak[m]);
 
 
 
 		std::cout << qq[0] << " " << qq[1] << " " << f[qq] << "\n";
-
+		fout << qq[0] << " " << qq[1] << " " << f[qq] << "\n";
 	}
 
 }//Как делать остаточную сеть?
@@ -353,7 +442,7 @@ void BFS(vector <vector <char> > Adj, char start) {//находит не для 
 	while (Q.empty() == false) {
 
 		char u = Q.front();
-		
+
 
 		for (int i = 0; i < Adj[u - 97].size(); i++) {
 
