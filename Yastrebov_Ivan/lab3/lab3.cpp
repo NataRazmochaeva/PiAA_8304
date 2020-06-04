@@ -32,7 +32,7 @@ int findPath(std::map<char, std::vector<std::pair<char, elem>>>& desk, char curr
 bool compCapacity(std::pair<char, elem> first, std::pair<char, elem> second) {
 	if (first.second.capacity == second.second.capacity)
 		return first.first < second.first;
-	return first.second.capacity < second.second.capacity;
+	return first.second.capacity > second.second.capacity;
 }
 
 bool compLexic(std::pair<char, elem> first, std::pair<char, elem> second) {
