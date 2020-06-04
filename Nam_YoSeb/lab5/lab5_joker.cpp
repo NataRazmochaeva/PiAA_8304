@@ -20,35 +20,35 @@ struct Vertex {
 int jump(int index, char symb, std::vector<Vertex>& arr_vertex, std::ostream& out);
 
 void addString(const std::string& str, std::vector<Vertex>& arr_vertex, int& count, std::ostream& out) {  //Функция добавления строки-паттерна в бор
-	std::cout << "Adding string \"" << str << "\" in the bohr" << std::endl;
+	out << "Adding string \"" << str << "\" in the bohr" << std::endl;
 	if (str.empty())
 		return;
 
 	int current = 0;
 	for (int i = 0; i < str.size(); i++) 
 	{
-		std::cout << "\tCurrent symbol: \'" << str[i] << "\'\n";
-		std::cout << "\tCurrent vertex: " << current << std::endl;
+		out << "\tCurrent symbol: \'" << str[i] << "\'\n";
+		out << "\tCurrent vertex: " << current << std::endl;
 
 		if (arr_vertex[current].next.find(str[i]) == arr_vertex[current].next.end())     //Если переход по символу не обнаружен и
 		{
-			std::cout << "\tWay through \'" << str[i] << "\' wasn't found. Adding new vertex with number " << arr_vertex.size() << std::endl;
+			out << "\tWay through \'" << str[i] << "\' wasn't found. Adding new vertex with number " << arr_vertex.size() << std::endl;
 			Vertex ver;                                                                 //итератор указывает на конец мэпа, то
 			ver.suffix = -1;                                                            //создаём новую вершину
 			ver.prev = current;
-			std::cout << "\t*previous vertex is " << current << ", the symbol of incoming path \'" << str[i] << "\'\n";
+			out << "\t*previous vertex is " << current << ", the symbol of incoming path \'" << str[i] << "\'\n";
 			ver.prev_char = str[i];
 			arr_vertex.push_back(ver);
 			arr_vertex[current].next[str[i]] = arr_vertex.size() - 1;                     //У предыдущей вершины переход в эту
 		}                                                                               //по текущему символу
 		else 
-			std::cout << "The way through the symbol exist" << std::endl;
+			out << "The way through the symbol exist" << std::endl;
 
-		std::cout << std::endl;
+		out << std::endl;
 		current = arr_vertex[current].next[str[i]];                                      //Переход к следующей вершине
 	}
-	std::cout << "The number of this pattern is " << count + 1 << std::endl;
-	std::cout << "Vertex " << current << " is terminal, deep of the vertex is " << str.size() << "\n\n";
+	out << "The number of this pattern is " << count + 1 << std::endl;
+	out << "Vertex " << current << " is terminal, deep of the vertex is " << str.size() << "\n\n";
 
 	arr_vertex[current].number.push_back(++count);       //Устанавливаем номер считанного паттерна,
 	arr_vertex[current].is_terminal = true;               //Терминальную вершину
@@ -57,27 +57,27 @@ void addString(const std::string& str, std::vector<Vertex>& arr_vertex, int& cou
 
 
 int getSuffix(int index, std::vector<Vertex>& arr_vertex, std::ostream& out) {   //Функция поиска суффиксной ссылки для вершины index
-	std::cout << "\t\t\tGetting suffix-link from vertex " << index << std::endl;
+	out << "\t\t\tGetting suffix-link from vertex " << index << std::endl;
 	if (arr_vertex[index].suffix == -1)                     //Если суффиксная ссылка ещё не была найдена
 	{
 		if (index == 0 || arr_vertex[index].prev == 0)     //Если вершина - корень или сын корня
 		{
 			arr_vertex[index].suffix = 0;
-			(index == 0) ? std::cout << "\t\t\tThis is root, suffix-link vertex = 0" << std::endl : std::cout << "\t\t\tThis is a vertex with deep = 1, suffix-link = 0" << std::endl;
+			(index == 0) ? out << "\t\t\tThis is root, suffix-link vertex = 0" << std::endl : out << "\t\t\tThis is a vertex with deep = 1, suffix-link = 0" << std::endl;
 		}
 		else                                               //Рекурсивный поиск суфф. ссылки. Получаем ссылку родителя и выполняем
 		{
-			std::cout << "\t\t\tFinding suffix-link from suffix of parent-vertex (" << arr_vertex[index].prev << ") through " << arr_vertex[index].prev_char << std::endl;
+			out << "\t\t\tFinding suffix-link from suffix of parent-vertex (" << arr_vertex[index].prev << ") through " << arr_vertex[index].prev_char << std::endl;
 			arr_vertex[index].suffix = jump(getSuffix(arr_vertex[index].prev, arr_vertex, out), arr_vertex[index].prev_char, arr_vertex, out);
 		}                                                   //из неё переход по символу, по которому попали в вершину, для
 	}                                                       //которой и ищется суфф. ссылка
-	std::cout << "\t\t\tSuffix-link from vertex " << index << " is " << arr_vertex[index].suffix << "\n\n";
+	out << "\t\t\tSuffix-link from vertex " << index << " is " << arr_vertex[index].suffix << "\n\n";
 	return arr_vertex[index].suffix;
 }
 
 
 int jump(int index, char symb, std::vector<Vertex>& arr_vertex, std::ostream& out){     //Функция перехода из вершины index по символу symb. Если прямой переход
-	std::cout << "\t\t\t*Finding the way from " << index << " through \'" << symb << "\'\n"; //невозможен, перейдёт по ссылке
+	out << "\t\t\t*Finding the way from " << index << " through \'" << symb << "\'\n"; //невозможен, перейдёт по ссылке
 	if (arr_vertex[index].jump.find(symb) == arr_vertex[index].jump.end())             //Если путь в массиве переходов ещё не был найден
 	{
 		if (arr_vertex[index].next.find(symb) != arr_vertex[index].next.end())     //Если найден прямой переход по символу в боре
@@ -85,33 +85,33 @@ int jump(int index, char symb, std::vector<Vertex>& arr_vertex, std::ostream& ou
 		else                                                                //Если прямого перехода нет, получаем суфф. ссылку
 		{																	//и ищем переход из суффиксной ссылки по заданному символу
 			if (index == 0)                                                   
-				std::cout << "\t\t\t*This is root" << std::endl;
+				out << "\t\t\t*This is root" << std::endl;
 			else
-				std::cout << "\t\t\t*No straight path. Finding the way from suffix-link of this vertex through \'" << symb << "\'\n";
+				out << "\t\t\t*No straight path. Finding the way from suffix-link of this vertex through \'" << symb << "\'\n";
 
 			arr_vertex[index].jump[symb] = (index == 0 ? 0 : jump(getSuffix(index, arr_vertex, out), symb, arr_vertex, out));
 		}
 	}
-	std::cout << "\t\t\t*Found way from " << index << " through \'" << symb << "\' is " << arr_vertex[index].jump[symb] << std::endl;
+	out << "\t\t\t*Found way from " << index << " through \'" << symb << "\' is " << arr_vertex[index].jump[symb] << std::endl;
 	return arr_vertex[index].jump[symb];
 }
 
 
 void search(const std::string& text, std::vector<Vertex>& arr_vertex, std::vector<int>& res, const std::vector<int>& pattern_offset_arr, int pattern_len, const std::vector<std::string>& arr_pattern, std::ostream& out){
-	std::cout << "Searching begin" << std::endl;
+	out << "Searching begin" << std::endl;
 	int curr = 0;
 
 	for (int i = 0; i < text.size(); i++)                                  //Перебираем все символы текста
 	{
-		std::cout << "\tCurrent symbol is \'" << text[i] << "\' from text..." << std::endl;
-		std::cout << "\tCurrent vertex is " << curr << std::endl;
+		out << "\tCurrent symbol is \'" << text[i] << "\' from text..." << std::endl;
+		out << "\tCurrent vertex is " << curr << std::endl;
 		curr = jump(curr, text[i], arr_vertex, out);                               //Осуществляем переход в автомате по считанному символу
-		std::cout << "\tAchieved vertex " << curr << std::endl;
-		std::cout << "\tFinding possible entrance with end suffix-links:\n";
+		out << "\tAchieved vertex " << curr << std::endl;
+		out << "\tFinding possible entrance with end suffix-links:\n";
 
 		for (int tmp = curr; tmp != 0; tmp = getSuffix(tmp, arr_vertex, out))   //Сам множественный поиск через суфф. ссылки
 		{
-			std::cout << "\t\tCurrent suffix-link vertex: " << tmp << std::endl;
+			out << "\t\tCurrent suffix-link vertex: " << tmp << std::endl;
 			if (arr_vertex[tmp].is_terminal)                                //Если какая-то из них конечная,
 			{																//увеличиваем под символом текста число вхождений паттернов
 				for (int j = 0; j < arr_vertex[tmp].number.size(); j++) 
@@ -120,7 +120,7 @@ void search(const std::string& text, std::vector<Vertex>& arr_vertex, std::vecto
 						i + 1 - pattern_offset_arr[arr_vertex[tmp].number[j] - 1] - arr_vertex[tmp].deep <= text.size() - pattern_len) 
 					{
 						res[i + 1 - pattern_offset_arr[arr_vertex[tmp].number[j] - 1] - arr_vertex[tmp].deep]++;
-						std::cout << "\t\tThe vertex is terminal (end suffix-link). The entrance found, index = " <<
+						out << "\t\tThe vertex is terminal (end suffix-link). The entrance found, index = " <<
 							i + 1 - pattern_offset_arr[arr_vertex[tmp].number[j] - 1] - arr_vertex[tmp].deep << " (pattern = \"" << arr_pattern[arr_vertex[tmp].number[j] - 1] <<
 							"\"). Count of entrance is " << res[i + 1 - pattern_offset_arr[arr_vertex[tmp].number[j] - 1] - arr_vertex[tmp].deep] <<
 							" from " << pattern_offset_arr.size() << " possible\n\n";
@@ -128,26 +128,26 @@ void search(const std::string& text, std::vector<Vertex>& arr_vertex, std::vecto
 				}
 			}
 			else
-				std::cout << "\t\tIt's not terminal vertex, getting suffix-link from this vertex\n\n";
+				out << "\t\tIt's not terminal vertex, getting suffix-link from this vertex\n\n";
 		}
-		std::cout << "\t\tRoot is arrived, reading new symbol from the text" << std::endl;
-		std::cout << "\t" << LONGLINE;
-		std::cout << "\t" << LONGLINE;
+		out << "\t\tRoot is arrived, reading new symbol from the text" << std::endl;
+		out << "\t" << LONGLINE;
+		out << "\t" << LONGLINE;
 	}
-	std::cout << LONGLINE;
-	std::cout << LONGLINE;
+	out << LONGLINE;
+	out << LONGLINE;
 }
 
 
 void printRes(const std::vector<int>& res, int pattern_cnt, std::string& cutted_text, int pattern_len, const std::string& text, std::ostream& out)
 {
-	std::cout << "Total indexes of entrance (beginning from 1):" << std::endl;
+	out << "Total indexes of entrance (beginning from 1):" << std::endl;
 	std::vector<bool> cut_str(text.size());          //Индексы символов в строке, которые будут вырезаны
 
 	for (int i = 0; i < res.size(); i++) 
 		if (res[i] == pattern_cnt)                  //Если под текущим символом текста совпали все паттерны,
 		{											 //то вхождение найдено
-			std::cout << i + 1 << std::endl;            
+			out << i + 1 << std::endl;            
 			for (int j = 0; j < pattern_len; j++)    //Перебираем все символы строки, образующие паттерн
 				cut_str[i + j] = true;               //Помечаем индексы символов в строке, подлежащие удалению
 		}
@@ -159,7 +159,7 @@ void printRes(const std::vector<int>& res, int pattern_cnt, std::string& cutted_
 
 //Функция разбивает строку-паттерн с джокерами на массив строк-паттернов без них и запоминает их индексы в первоначальной строке
 void split(std::string str, char joker, std::vector<std::string>& arr_pattern, std::vector<int>& pattern_offset_arr, std::ostream& out) {
-	std::cout << "Begin splitting" << std::endl;
+	out << "Begin splitting" << std::endl;
 	std::string buf = "";
 
 	for (int i = 0; i < str.size(); i++) 
@@ -169,9 +169,9 @@ void split(std::string str, char joker, std::vector<std::string>& arr_pattern, s
 			if (buf.size() > 0)                   //Пропускаем пустые строки (если джокеры идут подряд)
 			{
 				arr_pattern.push_back(buf);            //Сохраняем паттерн
-				std::cout << "\tWas found new pattern: " << buf << std::endl;
+				out << "\tWas found new pattern: " << buf << std::endl;
 				pattern_offset_arr.push_back(i - buf.size());   //и его индекс вхождения в строку с джокерами
-				std::cout << "\tIndex of entrance in total pattern: " << i - buf.size() << std::endl;
+				out << "\tIndex of entrance in total pattern: " << i - buf.size() << std::endl;
 				buf = "";
 			}
 		}
@@ -181,9 +181,9 @@ void split(std::string str, char joker, std::vector<std::string>& arr_pattern, s
 			if (i == str.size() - 1)               //Если достигнут конец паттерна
 			{
 				arr_pattern.push_back(buf);            //Сохраняем последний полученный паттерн без джокера
-				std::cout << "\tWas found new pattern: " << buf << std::endl;
+				out << "\tWas found new pattern: " << buf << std::endl;
 				pattern_offset_arr.push_back(i - buf.size() + 1);
-				std::cout << "\tIndex of entrance in total pattern: " << i - buf.size() + 1 << std::endl;
+				out << "\tIndex of entrance in total pattern: " << i - buf.size() + 1 << std::endl;
 			}
 		}
 	}
@@ -196,24 +196,24 @@ void readPattern(std::vector<Vertex>& arr_vertex, char& joker, std::vector<int>&
 	arr_vertex.push_back(root);
 	int count = 0;
 
-	std::cout << "Enter pattern:" << std::endl;
+	out << "Enter pattern:" << std::endl;
 	std::string pattern_str;                                    //Строка-паттерн
-	std::cin >> pattern_str;
-	std::cout << "Enter joker:" << std::endl;
-	std::cin >> joker;
+	in >> pattern_str;
+	out << "Enter joker:" << std::endl;
+	in >> joker;
 	pattern_len = pattern_str.size();                            //Длина паттерна
-	std::cout << LONGLINE;
+	out << LONGLINE;
 
 	split(pattern_str, joker, arr_pattern, pattern_offset_arr, out);
-	std::cout << LONGLINE;
-	std::cout << LONGLINE;
-	std::cout << "Begin bohr building" << std::endl;
+	out << LONGLINE;
+	out << LONGLINE;
+	out << "Begin bohr building" << std::endl;
 
 	for (auto pattern : arr_pattern)
 		addString(pattern, arr_vertex, count, out);    //Формируем бор
 
-	std::cout << LONGLINE;
-	std::cout << LONGLINE;
+	out << LONGLINE;
+	out << LONGLINE;
 }
 
 //Функция поиска максимального числа исходящих дуг из одной вершины бора
@@ -229,17 +229,17 @@ int findMaxSons(std::vector<Vertex> arr_vertex) {
 }
 
 void printAutomate(std::vector <Vertex> arr_vertex, std::ostream& out) {
-	std::cout << LONGLINE;
-	std::cout << "Total automate:" << std::endl;
+	out << LONGLINE;
+	out << "Total automate:" << std::endl;
 
 	for (int i = 0; i < arr_vertex.size(); i++)
 	{
-		std::cout << "Connections from vertex " << i << ":\n";
+		out << "Connections from vertex " << i << ":\n";
 		auto iter = arr_vertex[i].jump.begin();
 
 		for (int j = 0; j < arr_vertex[i].jump.size(); j++)
 		{
-			std::cout << "\t" << i << "  --" << iter->first << "->  " << iter->second << std::endl;
+			out << "\t" << i << "  --" << iter->first << "->  " << iter->second << std::endl;
 			iter++;
 		}
 	}
@@ -247,10 +247,10 @@ void printAutomate(std::vector <Vertex> arr_vertex, std::ostream& out) {
 
 
 void dialog(std::istream& in, std::ostream& out) {
-	std::cout << LONGLINE;
-	std::cout << "Enter text:" << std::endl;
+	out << LONGLINE;
+	out << "Enter text:" << std::endl;
 	std::string text, cutted_text;
-	std::cin >> text;
+	in >> text;
 
 	std::vector<Vertex> arr_vertex;      //Массив вершин
 	std::vector<std::string> arr_pattern;
@@ -267,10 +267,10 @@ void dialog(std::istream& in, std::ostream& out) {
 	search(text, arr_vertex, res, pattern_offset_arr, pattern_len, arr_pattern, out);
 	printRes(res, arr_pattern.size(), cutted_text, pattern_len, text, out);
 
-	std::cout << "Rest string from text after cutting patterns from it: " << cutted_text << std::endl;
+	out << "Rest string from text after cutting patterns from it: " << cutted_text << std::endl;
 
 	int max_cnt_sons = findMaxSons(arr_vertex);
-	std::cout << "Max count of sons: " << max_cnt_sons << "\n\n";
+	out << "Max count of sons: " << max_cnt_sons << "\n\n";
 
 	printAutomate(arr_vertex, out);
 }
