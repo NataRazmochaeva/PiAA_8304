@@ -9,18 +9,12 @@ struct Vertex
 	std::vector<int> next;
 	bool is_leaf = false;
 	std::vector<size_t> str_nums;
-
-	int link = -1;
-	int from = -1;
-	char how = 0;
 	std::vector<int> go;
 };
 
 Vertex BorVertex(int from, char how)
 {
 	Vertex vert;
-	vert.next = { -1, -1, -1, -1, -1 };
-	vert.go = { -1, -1, -1, -1, -1 };
 	vert.from = from;
 	vert.how = how;
 
