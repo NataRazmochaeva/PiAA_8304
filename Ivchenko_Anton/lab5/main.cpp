@@ -3,145 +3,202 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <fstream>
 
-struct Vertex
-{
-	std::vector<int> next;
-	bool is_leaf = false;
-	std::vector<size_t> str_nums;
-	std::vector<int> go;
+std::map<char, int> alphabet = { {'A', 1},{'C', 2},{'G', 3},{'T', 4}, {'N', 5} };
+std::map <std::string, int> pattern;
+
+struct Vertex {
+	
+	bool root = false;
+	bool leaf = false;
+	std::vector<char> suffix;
+	std::map<char, Vertex*> next;
+	std::vector<Vertex*> next_dfs;
+	Vertex* auto_move = nullptr;
+	Vertex* suff_link = nullptr;
+	Vertex* parent = nullptr;
+
 };
+Vertex* automatic(Vertex* a, char ch);
 
-Vertex BorVertex(int from, char how)
-{
-	Vertex vert;
-	vert.from = from;
-	vert.how = how;
+Vertex* setSuffixLink(Vertex *cur) {
 
-	return vert;
+	if (cur->root) return cur;
+
+	if (cur->suff_link == nullptr) {
+		if (cur->parent->root)
+			cur->suff_link = cur->parent;
+		else
+			cur->suff_link = automatic(setSuffixLink(cur->parent), cur->suffix.back());
+	}
+	return cur->suff_link;
 }
 
-void addToBor(std::string& str, std::vector<Vertex>& bor, std::map<char, int>& alphabet, int str_num)
-{
-	int borInd = 0;
-	for (auto c : str)
-	{
-		char cInd = alphabet[c];
+std::map<Vertex*, bool> used;
 
-		if (bor[borInd].next[cInd] == -1)
-		{
-			bor.push_back(BorVertex(borInd, cInd));
-			bor[borInd].next[cInd] = bor.size() - 1;
+void dfs(Vertex* a) {
+	used[a] = 1;
+
+	for (auto i : a->next_dfs) {
+		if (!used[i]) {
+			//a->suff_link = setSuffixLink(a);
+			dfs(i);
 		}
-
-		borInd = bor[borInd].next[cInd];
 	}
-
-	bor[borInd].is_leaf = true;
-	bor[borInd].str_nums.push_back(str_num);
 }
 
-int next(int v, char c, std::vector<Vertex>& bor);
+Vertex* makeTrieVertex(Vertex* par, char a) {
 
-int get_link(int v, std::vector<Vertex>& bor)
-{
-	if (bor[v].link == -1)
-	{
-		if (v == 0 || bor[v].from == 0)
-			bor[v].link = 0;
-		else
-			bor[v].link = go(get_link(bor[v].from, bor), bor[v].how, bor);
-	}
-
-	return bor[v].link;
+	Vertex* vrtx = new Vertex;
+	vrtx->parent = par;
+	vrtx->suffix = par->suffix;
+	vrtx->suffix.push_back(a);
+	return vrtx;
 }
 
-int next(int v, char c, std::vector<Vertex>& bor)
-{
-	if (bor[v].go[c] == -1)
-	{
-		if (bor[v].next[c] != -1)
-			bor[v].go[c] = bor[v].next[c];
-		else
-		{
-			if (v == 0)
-				bor[v].go[c] = 0;
+void addToTrie(std::string& sample, Vertex* root) {
+
+	Vertex* ptr = root;
+	for (int i = 0; i < sample.length(); i++) {
+
+		if (alphabet[sample[i]]) {
+			
+			if (!ptr->next[sample[i]]) {
+				Vertex* nextVertex = makeTrieVertex(ptr, sample[i]);
+				ptr->next[sample[i]] = nextVertex;
+				ptr->next_dfs.push_back(nextVertex);
+				ptr = nextVertex;
+			}
+			else ptr = ptr->next[sample[i]];
+
+		}
+		else std::cout << "Incorrect";
+
+	}ptr->leaf = true;
+}
+
+Vertex* automatic(Vertex *a, char ch) {
+
+
+	if (a->auto_move == nullptr || a->root) {
+		if (a->next[ch]) {
+			a->auto_move = a->next[ch];
+			return a->auto_move;
+		}
+		else {
+			if (a->root)
+				a->auto_move = a;
 			else
-				bor[v].go[c] = go(get_link(v, bor), c, bor);
+				a->auto_move = automatic(setSuffixLink(a), ch);
 		}
 	}
-
-	return bor[v].go[c];
+	return a->auto_move;
 }
 
-int main()
-{
-	std::map<char, int> my_map;
-	my_map['A'] = 0;
-	my_map['C'] = 1;
-	my_map['G'] = 2;
-	my_map['T'] = 3;
-	my_map['N'] = 4;
+Vertex* disjoint(Vertex* a, char ch, Vertex* root) {
 
+
+	if (a->auto_move == nullptr || a->root) {
+		if (a->next[ch]) {
+			a->auto_move = a->next[ch];
+			return a->auto_move;
+		}
+		else {
+			if (a->root)
+				a->auto_move = a;
+			else
+				a->auto_move = disjoint(root, ch, root);//ссылка в корень
+		}
+	}
+	return a->auto_move;
+}
+void check(Vertex* a, int i, std::vector<int>& res) {
+
+	if(a != nullptr) {
+
+		if (a->leaf) {
+			std::string s(a->suffix.begin(), a->suffix.end());
+			res.push_back(i - s.length() + 1);
+			res.push_back(pattern[s] + 1);
+		}
+	}
+}
+
+
+void AhoCorasik(std::string& s, Vertex* root, std::ostream& out) {
+
+	std::vector<int> result;
+	Vertex* u = root;
+	
+	for (int i = 0; i < s.length() ; i++) {
+		
+		if (alphabet[s[i]]) {
+
+			//u = disjoint(u, s[i], root);
+			u = automatic(u, s[i]);
+			check(u, i + 1, result);
+		
+		}
+		
+	}
+	for (int a = 0; a < result.size(); a += 2) {
+		out << result[a] << ' ' << result[a + 1] << std::endl;
+	}
+}
+int main(){
+
+	int n;
+	std::vector<int> result;
 	std::string text;
-	std::string pattern;
-	char J;
 
-	std::cin >> text;
-	std::cin >> pattern;
-	std::cin >> J;
+	int input_ch, output_ch;
 
-	pattern += J;
+	std::cout << "Input: console = 0; file = 1\n";
+	std::cin >> input_ch;
 
-	std::vector<std::string> q;
-	std::vector<size_t> l;
+	Vertex* root = new Vertex;
+	root->root = true;
 
-	std::string cur;
-	for (int i = 0; i < pattern.length(); ++i)
-	{
-		if (pattern[i] == J)
-		{
-			if (!cur.empty())
-			{
-				q.push_back(cur);
-				l.push_back(i - cur.size() + 1);
-			}
-			cur.clear();
-		}
-		else
-			cur += pattern[i];
+	std::istream* input;
+
+	if (input_ch == 1) {
+		
+		std::ifstream infile("input.txt");
+		input = &infile;
+
+	}
+	else
+		input = &std::cin;
+
+
+	*input >> text;
+	*input >> n;
+
+	for (int i = 0; i < n; i++) {
+		std::string str;
+		*input >> str;
+		pattern[str] = i;
+		addToTrie(str, root);
 	}
 
-	std::vector<Vertex> bor;
-	bor.push_back(make_bor_vertex(0, 0));
+	std::cout << "Output:\nconsole = 0; file =  1" << std::endl;
+	std::cin >> output_ch;
 
-	for (size_t i = 0; i < q.size(); ++i)
-		addToBor(q[i], bor, alphabet, i);
+	dfs(root);//устанавливаем суффиксные ссылки в боре методом обхода в глубину
 
-	std::vector<size_t> c(text.size());
-
-	int u = 0;
-	for (int i = 0; i < text.length(); ++i)
-	{
-		u = go(u, alphabet[text[i]], bor);
-		for (int v = u; v != 0; v = get_link(v, bor))
-			if (bor[v].is_leaf)
-			{
-				for (auto& str_num : bor[v].str_nums)
-				{
-					int j = i - q[str_num].length() + 1;
-					if (j >= l[str_num] - 1)
-						++c[j - l[str_num] + 1];
-				}
-			}
+	if (output_ch == 0) {
+		AhoCorasik(text, root, std::cout);
 	}
-
-
-	for (int i = 0; i < text.size(); ++i)
-		if (c[i] == q.size())
-		{
-			if (i + pattern.size() - 1 <= text.size())
-				std::cout << i + 1 << "\n";
+	else if (output_ch == 1) {
+		std::ofstream file;
+		file.open("result.txt");
+		if (!file.is_open()) {
+			std::cout << "Incorrect!\n";
+			return 0;
 		}
+		AhoCorasik(text, root, file);
+	}
+	
+	return 0;
 }
-
